@@ -43,7 +43,7 @@
                 android:layout_marginStart="150dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif-black"
-                android:text="TITLE"
+                android:text="@string/title"
                 android:textColor="#000"
                 android:textSize="24sp" />
 
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title_view"
                 android:layout_marginStart="150dp"
-                android:text="release_date"
+                android:text="@string/release_date"
                 android:textSize="16sp" />
 
             <LinearLayout
@@ -90,7 +90,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="140dp"
                 android:fontFamily="sans-serif-medium"
-                android:text="Plot"
+                android:text="@string/plot"
                 android:textSize="21sp" />
 
             <TextView
@@ -101,7 +101,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="sans-serif"
-                android:text="overview content"
+                android:text="@string/overview_content"
                 android:textSize="15sp" />
         </RelativeLayout>
     </RelativeLayout>

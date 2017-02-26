@@ -1,10 +1,13 @@
 package com.santhosh.smarttheatre;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -28,12 +31,27 @@ public class MovieRecycleAdapter extends RecyclerView.Adapter<RecyclerMovieHolde
     }
 
     @Override
-    public void onBindViewHolder(RecyclerMovieHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerMovieHolder holder, int position) {
         MovieData movieData = movieDataList.get(position);
         holder.setMovieData(movieData);
         String imageUrl = "https://image.tmdb.org/t/p/w342/"+movieData.poster_path;
         holder.movieName.setText(movieData.title);
-        Picasso.with(holder.movieThumbnail.getContext()).load(imageUrl).into(holder.movieThumbnail);
+        Picasso.with(holder.movieThumbnail.getContext()).load(imageUrl).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                holder.movieThumbnail.setImageBitmap(bitmap);
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        });
     }
 
     @Override

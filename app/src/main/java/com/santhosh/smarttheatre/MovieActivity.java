@@ -44,12 +44,13 @@ import java.io.IOException;
 
 public class MovieActivity extends AppCompatActivity {
 
-    private static final int ANIM_DURATION = 500;
     int mLeftDelta;
     int mTopDelta;
     float mWidthScale;
+
     float mHeightScale;
     private ColorDrawable mBackground;
+
     private int thumbnailTop;
     private int thumbnailLeft;
     private int thumbnailWidth;
@@ -73,7 +74,7 @@ public class MovieActivity extends AppCompatActivity {
 
         MovieData movieData = (MovieData) bundle.getSerializable("movieData");
 
-        final ImageView poster_imageView = (ImageView) findViewById(R.id.holder_image);
+        ImageView poster_imageView = (ImageView) findViewById(R.id.holder_image);
         final ImageView backdrop_imageView = (ImageView) findViewById(R.id.backdrop_image);
 
         TextView textView = (TextView) findViewById(R.id.title_view);
@@ -135,27 +136,31 @@ public class MovieActivity extends AppCompatActivity {
         mBackground = new ColorDrawable(Color.WHITE);
         findViewById(R.id.top_level_view).setBackground(mBackground);
         if (savedInstanceState == null) {
-            ViewTreeObserver observer = poster_imageView.getViewTreeObserver();
-            observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-
-                @Override
-                public boolean onPreDraw() {
-                    poster_imageView.getViewTreeObserver().removeOnPreDrawListener(this);
-
-                    int[] screenLocation = new int[2];
-                    poster_imageView.getLocationOnScreen(screenLocation);
-                    mLeftDelta = thumbnailLeft - screenLocation[0];
-                    mTopDelta = thumbnailTop - screenLocation[1];
-
-                    mWidthScale = (float) thumbnailWidth / poster_imageView.getWidth();
-                    mHeightScale = (float) thumbnailHeight / poster_imageView.getHeight();
-
-                    runEnterAnimation();
-
-                    return true;
-                }
-            });
+            activityTransition(poster_imageView);
         }
+    }
+
+    private void activityTransition(final ImageView poster_imageView){
+        ViewTreeObserver observer = poster_imageView.getViewTreeObserver();
+        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+
+            @Override
+            public boolean onPreDraw() {
+                poster_imageView.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                int[] screenLocation = new int[2];
+                poster_imageView.getLocationOnScreen(screenLocation);
+                mLeftDelta = thumbnailLeft - screenLocation[0];
+                mTopDelta = thumbnailTop - screenLocation[1];
+
+                mWidthScale = (float) thumbnailWidth / poster_imageView.getWidth();
+                mHeightScale = (float) thumbnailHeight / poster_imageView.getHeight();
+
+                runEnterAnimation();
+
+                return true;
+            }
+        });
     }
 
     public static void setLightStatusBar(@NonNull View view) {
@@ -260,7 +265,9 @@ public class MovieActivity extends AppCompatActivity {
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                getWindow().setStatusBarColor((int) valueAnimator.getAnimatedValue());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setStatusBarColor((int) valueAnimator.getAnimatedValue());
+                }
             }
         });
         valueAnimator.start();

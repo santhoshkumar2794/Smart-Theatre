@@ -26,19 +26,20 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static String API_KEY = "b76a25abf2c1e22812ad0092f1333ab3";
-    JSONObject jsonObject;
+    private static String API_KEY = "MOVIESDB_API_KEY";
     List<MovieData> movieHolderList = new ArrayList<>();
     MovieRecycleAdapter movieRecycleAdapter;
     boolean isLoading = false;
     int currentPage = 1;
     String type = "popular";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         RecyclerView listView = (RecyclerView) findViewById(R.id.movie_list);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+
         listView.setLayoutManager(gridLayoutManager);
         listView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -150,9 +151,5 @@ public class MainActivity extends AppCompatActivity {
         });
 
         queue.add(jsonObjectRequest);
-    }
-
-    public void onClick(View view) {
-
     }
 }

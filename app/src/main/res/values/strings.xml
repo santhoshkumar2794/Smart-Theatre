@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Smart Theatre</string>
     <string name="holder_name">HOLDER&#160;</string>
+    <string name="plot">Plot</string>
+    <string name="overview_content">overview content</string>
+    <string name="release_date">release_date</string>
+    <string name="title">TITLE</string>
 </resources>
