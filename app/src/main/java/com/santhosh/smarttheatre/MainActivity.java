@@ -37,11 +37,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RecyclerView listView = (RecyclerView) findViewById(R.id.movie_list);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movie_list);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
 
-        listView.setLayoutManager(gridLayoutManager);
-        listView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -90,8 +89,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if (pageNumber == 1) {
             movieRecycleAdapter = new MovieRecycleAdapter(movieHolderList);
-            RecyclerView listView = (RecyclerView) findViewById(R.id.movie_list);
-            listView.setAdapter(movieRecycleAdapter);
+            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movie_list);
+            recyclerView.setAdapter(movieRecycleAdapter);
         } else {
             movieRecycleAdapter.notifyDataSetChanged();
         }

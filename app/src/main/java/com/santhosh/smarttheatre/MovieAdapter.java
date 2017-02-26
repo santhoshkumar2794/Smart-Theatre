@@ -33,7 +33,6 @@ public class MovieAdapter extends ArrayAdapter<MovieHolder> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.movie_holder, parent,false);
         }
         TextView textView = (TextView) convertView.findViewById(R.id.holder_text);
-        //textView.setCompoundDrawablesWithIntrinsicBounds(0,movieHolder.movieThumbnailID,0,0);
         textView.setText(movieHolder.movieName);
         return convertView;
     }

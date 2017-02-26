@@ -17,7 +17,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -98,7 +97,6 @@ public class MovieActivity extends AppCompatActivity {
                         if (swatch != null) {
                             boolean isLight = isLight(statusBarColor);
                             currentStatusBarColor = scrimify(swatch.getRgb(), !isLight, 0.075f);
-                            Log.e("isLight", "here " + isLight + "  " + isLight(currentStatusBarColor));
                             if (isLight(currentStatusBarColor)) {
                                 setLightStatusBar(backdrop_imageView);
                             }
@@ -107,7 +105,9 @@ public class MovieActivity extends AppCompatActivity {
                             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                                 @Override
                                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                                    getWindow().setStatusBarColor((int) valueAnimator.getAnimatedValue());
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                        getWindow().setStatusBarColor((int) valueAnimator.getAnimatedValue());
+                                    }
                                 }
                             });
                             valueAnimator.start();

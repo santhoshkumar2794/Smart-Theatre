@@ -33,25 +33,27 @@ public class MovieRecycleAdapter extends RecyclerView.Adapter<RecyclerMovieHolde
     @Override
     public void onBindViewHolder(final RecyclerMovieHolder holder, int position) {
         MovieData movieData = movieDataList.get(position);
-        holder.setMovieData(movieData);
-        String imageUrl = "https://image.tmdb.org/t/p/w342/"+movieData.poster_path;
-        holder.movieName.setText(movieData.title);
-        Picasso.with(holder.movieThumbnail.getContext()).load(imageUrl).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                holder.movieThumbnail.setImageBitmap(bitmap);
-            }
+        if (movieData!=null) {
+            holder.setMovieData(movieData);
+            String imageUrl = "https://image.tmdb.org/t/p/w342/" + movieData.poster_path;
+            holder.movieName.setText(movieData.title);
+            Picasso.with(holder.movieThumbnail.getContext()).load(imageUrl).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    holder.movieThumbnail.setImageBitmap(bitmap);
+                }
 
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
 
-            }
+                }
 
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     @Override

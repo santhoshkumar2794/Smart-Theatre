@@ -49,7 +49,6 @@ public class RecyclerMovieHolder extends RecyclerView.ViewHolder implements View
 
     @Override
     public void onClick(View view) {
-        Log.e("clicked","here");
         Intent intent = new Intent(view.getContext(),MovieActivity.class);
         Bundle bundle = captureValues(movieThumbnail);
         bundle.putSerializable("movieData", movieData);
@@ -64,7 +63,6 @@ public class RecyclerMovieHolder extends RecyclerView.ViewHolder implements View
         int[] screenLocation = new int[2];
 
         view.getLocationOnScreen(screenLocation);
-        Log.e("screen "+screenLocation[0]," top  "+screenLocation[1]+"   "+view.getHeight()+"  "+view.getMeasuredHeight());
         b.putInt("PROPNAME_SCREENLOCATION_LEFT", screenLocation[0]);
         b.putInt("PROPNAME_SCREENLOCATION_TOP", screenLocation[1]);
         b.putInt("PROPNAME_WIDTH", view.getWidth());
