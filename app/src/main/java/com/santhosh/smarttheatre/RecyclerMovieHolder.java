@@ -51,7 +51,7 @@ public class RecyclerMovieHolder extends RecyclerView.ViewHolder implements View
     public void onClick(View view) {
         Intent intent = new Intent(view.getContext(),MovieActivity.class);
         Bundle bundle = captureValues(movieThumbnail);
-        bundle.putSerializable("movieData", movieData);
+        bundle.putParcelable("movieData", movieData);
         intent.putExtra("extra",bundle);
         view.getContext().startActivity(intent);
         ((MainActivity) view.getContext()).overridePendingTransition(0,0);

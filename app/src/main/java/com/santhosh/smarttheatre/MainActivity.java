@@ -1,14 +1,16 @@
 package com.santhosh.smarttheatre;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -26,7 +28,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static String API_KEY = "MOVIESDB_API_KEY";
+    private static String API_KEY = BuildConfig.API_KEY;
     List<MovieData> movieHolderList = new ArrayList<>();
     MovieRecycleAdapter movieRecycleAdapter;
     boolean isLoading = false;
@@ -37,8 +39,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        int noOfCols = calculateNoOfColumns(this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movie_list);
-        final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, noOfCols);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        movieRecycleAdapter = new MovieRecycleAdapter(20);
+        recyclerView.setAdapter(movieRecycleAdapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -53,6 +60,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         getPopularRequest();
+    }
+
+    public static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        float holderWidth = context.getResources().getDimension(R.dimen.default_holder_width)/displayMetrics.density;
+        int noOfColumns = (int) (dpWidth / holderWidth);
+        return noOfColumns;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        int noOfCols = calculateNoOfColumns(this);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movie_list);
+        GridLayoutManager gridLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+        gridLayoutManager.setSpanCount(noOfCols);
+        recyclerView.setLayoutManager(gridLayoutManager);
     }
 
     @Override
@@ -122,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.v("error_reposnse","here "+error.toString());
+                Log.v("error_response","here "+error.toString());
             }
         });
 

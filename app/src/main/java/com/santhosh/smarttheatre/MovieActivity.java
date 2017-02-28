@@ -37,6 +37,9 @@ import com.squareup.picasso.Target;
 
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by santhosh-3366 on 07/02/17.
  */
@@ -57,11 +60,20 @@ public class MovieActivity extends AppCompatActivity {
     private int statusBarColor;
     private int currentStatusBarColor;
 
+    @BindView(R.id.title_view) TextView titleView;
+    @BindView(R.id.overview) TextView overViewContainer;
+    @BindView(R.id.release_date) TextView release_date;
+    @BindView(R.id.rating_view) TextView rating_view;
+
+    @BindView(R.id.backdrop_image) ImageView backdrop_imageView;
+    @BindView(R.id.holder_image) ImageView poster_imageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_activity);
 
+        ButterKnife.bind(this);
         statusBarColor = getWindow().getStatusBarColor();
 
         Intent intent = getIntent();
@@ -71,15 +83,7 @@ public class MovieActivity extends AppCompatActivity {
         thumbnailWidth = bundle.getInt("PROPNAME_WIDTH");
         thumbnailHeight = bundle.getInt("PROPNAME_HEIGHT");
 
-        MovieData movieData = (MovieData) bundle.getSerializable("movieData");
-
-        ImageView poster_imageView = (ImageView) findViewById(R.id.holder_image);
-        final ImageView backdrop_imageView = (ImageView) findViewById(R.id.backdrop_image);
-
-        TextView textView = (TextView) findViewById(R.id.title_view);
-        TextView overViewContainer = (TextView) findViewById(R.id.overview);
-        TextView release_date = (TextView) findViewById(R.id.release_date);
-        TextView rating_view = (TextView) findViewById(R.id.rating_view);
+        MovieData movieData = bundle.getParcelable("movieData");
 
         String poster_url = "https://image.tmdb.org/t/p/w342/" + movieData.poster_path;
         String backdrop_url = "https://image.tmdb.org/t/p/w500/" + movieData.backdrop_path;
@@ -127,7 +131,7 @@ public class MovieActivity extends AppCompatActivity {
             }
         });
 
-        textView.setText(movieData.original_title);
+        titleView.setText(movieData.original_title);
         overViewContainer.setText(movieData.overview);
         release_date.setText(movieData.release_date);
         rating_view.setText(String.valueOf(movieData.vote_average));

@@ -13,18 +13,18 @@
         <ImageView
             android:id="@+id/backdrop_image"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="@dimen/backdrop_height"
             android:scaleType="fitXY"
             android:src="@drawable/image_placeholder" />
 
         <ImageView
             android:id="@+id/holder_image"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
+            android:layout_width="@dimen/poster_width"
+            android:layout_height="@dimen/poster_left"
             android:layout_below="@+id/backdrop_image"
             android:layout_marginStart="10dp"
             android:layout_marginTop="-20dp"
-            android:background="#0091EA"
+            android:background="@color/holder_background"
             android:elevation="10dp"
             android:scaleType="fitXY"
             android:src="@drawable/image_placeholder"
@@ -40,7 +40,7 @@
                 android:id="@+id/title_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="150dp"
+                android:layout_marginStart="@dimen/poster_left"
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif-black"
                 android:text="@string/title"
