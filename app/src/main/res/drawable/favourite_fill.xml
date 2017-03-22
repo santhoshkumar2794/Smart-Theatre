@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_heart_empty">
+    <target
+        android:animation="@animator/heart_break_draw_stroke"
+        android:name="heart_beat"/>
+</animated-vector>-->
+
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_heart_fill">
+
+    <target
+        android:animation="@animator/heart_beat"
+        android:name="heart"/>
+
+    <!--<aapt:attr name="android:drawable">
+
+        <vector
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+
+            <path
+                android:pathData="M16.05,5 C14.484,5 12.981,5.70626703 12,6.81798365 C11.019,5.70626703 9.516,5 7.95,5 C5.1735,5 3,7.10572207 3,9.79564033 C3,13.0871935 6.06,15.7771117 10.695,19.853406 L12,21 L13.305,19.853406 C17.94,15.7771117 21,13.0871935 21,9.79564033 C21,7.10572207 18.8265,5 16.05,5 L16.05,5 Z M12.0945,18.5629428 L12,18.6457766 L11.9055,18.5629428 C7.626,14.800545 4.8,12.3155313 4.8,9.79564033 C4.8,8.05613079 6.1545,6.74386921 7.95,6.74386921 C9.336,6.74386921 10.686,7.61144414 11.1585,8.80163488 L12.837,8.80163488 C13.314,7.61144414 14.664,6.74386921 16.05,6.74386921 C17.8455,6.74386921 19.2,8.05613079 19.2,9.79564033 C19.2,12.3155313 16.374,14.800545 12.0945,18.5629428 L12.0945,18.5629428 Z"
+                android:fillColor="#FFF" />
+
+            <group android:name="filled">
+
+                <clip-path
+                    android:name="clip"
+                    android:pathData="M18,388 C18,38 24,38 24,38 C24,38 32,38 32,38 C32,38 38,38 38,38 L38,38 L18,38 L18,18 Z" />
+
+                <path
+                    android:pathData="M12,21 L10.695,19.853406 C6.06,15.7771117 3,13.0871935 3,9.79564033 C3,7.10572207 5.1735,5 7.95,5 C9.516,5 11.019,5.70626703 12,6.81798365 C12.981,5.70626703 14.484,5 16.05,5 C18.8265,5 21,7.10572207 21,9.79564033 C21,13.0871935 17.94,15.7771117 13.305,19.853406 L12,21 L12,21 Z"
+                    android:fillColor="#FFF" />
+
+            </group>
+
+        </vector>
+
+    </aapt:attr>
+
+    <target android:name="clip">
+
+        <aapt:attr name="android:animation">
+
+            <set android:ordering="sequentially">
+
+                <objectAnimator
+                    android:propertyName="pathData"
+                    android:valueFrom="M18,388 C18,38 24,38 24,38 C24,38 32,38 32,38 C32,38 38,38 38,38 L38,38 L18,38 L18,18 Z"
+                    android:valueTo="M18,26 C18,26 21,28 24,28 C27,28 29,25 32,25 C35,25 38,26 38,26 L38,38 L18,38 L18,26 Z"
+                    android:valueType="pathType"
+                    android:duration="160"
+                    android:interpolator="@android:interpolator/fast_out_linear_in" />
+
+                <objectAnimator
+                    android:propertyName="pathData"
+                    android:valueFrom="M18,26 C18,26 21,28 24,28 C27,28 29,25 32,25 C35,25 38,26 38,26 L38,38 L18,38 L18,26 Z"
+                    android:valueTo="M18,18 C18,18 24,18 24,18 C24,18 32,18 32,18 C32,18 38,18 38,18 L38,38 L18,38 L18,18 Z"
+                    android:valueType="pathType"
+                    android:duration="120"
+                    android:interpolator="@android:interpolator/linear_out_slow_in" />
+
+            </set>
+
+        </aapt:attr>
+
+    </target>-->
+
+</animated-vector>

@@ -6,4 +6,5 @@
     <dimen name="poster_width">100dp</dimen>
     <dimen name="poster_left">150dp</dimen>
     <dimen name="backdrop_height">300dp</dimen>
+    <integer name="fav_anim_duration">1000</integer>
 </resources>

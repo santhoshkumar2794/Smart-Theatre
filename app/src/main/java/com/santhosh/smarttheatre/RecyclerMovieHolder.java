@@ -53,7 +53,7 @@ public class RecyclerMovieHolder extends RecyclerView.ViewHolder implements View
         Bundle bundle = captureValues(movieThumbnail);
         bundle.putParcelable("movieData", movieData);
         intent.putExtra("extra",bundle);
-        view.getContext().startActivity(intent);
+        (view.getContext()).startActivity(intent);
         ((MainActivity) view.getContext()).overridePendingTransition(0,0);
     }
 

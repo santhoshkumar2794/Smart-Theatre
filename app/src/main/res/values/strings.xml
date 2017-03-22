@@ -5,4 +5,6 @@
     <string name="overview_content">overview content</string>
     <string name="release_date">release_date</string>
     <string name="title">TITLE</string>
+    <string name="trailer">Trailer</string>
+    <string name="review">Review</string>
 </resources>

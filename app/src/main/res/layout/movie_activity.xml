@@ -1,108 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/top_level_view"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<merge xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <RelativeLayout
-        android:id="@+id/title_frame"
+    <ScrollView
+        android:id="@+id/top_level_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/backdrop_image"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/backdrop_height"
-            android:scaleType="fitXY"
-            android:src="@drawable/image_placeholder" />
-
-        <ImageView
-            android:id="@+id/holder_image"
-            android:layout_width="@dimen/poster_width"
-            android:layout_height="@dimen/poster_left"
-            android:layout_below="@+id/backdrop_image"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="-20dp"
-            android:background="@color/holder_background"
-            android:elevation="10dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/image_placeholder"
-            android:translationZ="10dp" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/content_panel"
+            android:id="@+id/title_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/backdrop_image">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/title_view"
+            <ImageView
+                android:id="@+id/backdrop_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/poster_left"
-                android:layout_marginTop="10dp"
-                android:fontFamily="sans-serif-black"
-                android:text="@string/title"
-                android:textColor="#000"
-                android:textSize="24sp" />
+                android:layout_height="@dimen/backdrop_height"
+                android:scaleType="fitXY"
+                android:src="@drawable/image_placeholder" />
 
-            <TextView
-                android:id="@+id/release_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title_view"
-                android:layout_marginStart="150dp"
-                android:text="@string/release_date"
-                android:textSize="16sp" />
+            <ImageView
+                android:id="@+id/holder_image"
+                android:layout_width="@dimen/poster_width"
+                android:layout_height="@dimen/poster_left"
+                android:layout_below="@+id/backdrop_image"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="-20dp"
+                android:background="@color/holder_background"
+                android:elevation="10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/image_placeholder"
+                android:translationZ="10dp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/release_date"
-                android:layout_marginStart="150dp"
-                android:orientation="horizontal">
-
-                <RatingBar
-                    android:id="@+id/rating_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:numStars="5"
-                    android:stepSize="1"/>
+            <RelativeLayout
+                android:id="@+id/content_panel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/backdrop_image"
+                android:layout_marginBottom="10dp">
 
                 <TextView
-                    android:id="@+id/rating_view"
+                    android:id="@+id/title_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/poster_left"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="sans-serif-black"
+                    android:text="@string/title"
+                    android:textColor="#000"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/release_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="1.0"
+                    android:layout_below="@id/title_view"
+                    android:layout_marginStart="150dp"
+                    android:text="@string/release_date"
                     android:textSize="16sp" />
-            </LinearLayout>
 
-            <TextView
-                android:id="@+id/overview_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="140dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="@string/plot"
-                android:textSize="21sp" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/release_date"
+                    android:layout_marginStart="150dp"
+                    android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/overview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/overview_title"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:fontFamily="sans-serif"
-                android:text="@string/overview_content"
-                android:textSize="15sp" />
+                    <RatingBar
+                        android:id="@+id/rating_bar"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:numStars="5"
+                        android:stepSize="1" />
+
+                    <TextView
+                        android:id="@+id/rating_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center"
+                        android:text="1.0"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/overview_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="140dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/plot"
+                    android:textSize="21sp" />
+
+                <TextView
+                    android:id="@+id/overview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/overview_title"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/overview_content"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/trailer_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/overview"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/trailer"
+                    android:textSize="21sp" />
+
+                <HorizontalScrollView
+                    android:id="@+id/trailer_scroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_below="@id/trailer_title"
+                    android:layout_marginTop="5dp"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/trailer_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="invisible"/>
+                </HorizontalScrollView>
+
+                <LinearLayout
+                    android:id="@+id/review_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/trailer_scroll"
+                    android:orientation="vertical"
+                    android:visibility="invisible">
+
+                    <TextView
+                        android:id="@+id/review_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="@string/review"
+                        android:textSize="21sp" />
+                </LinearLayout>
+            </RelativeLayout>
+
         </RelativeLayout>
-    </RelativeLayout>
-</ScrollView>
+    </ScrollView>
+
+    <com.santhosh.smarttheatre.FABToggle
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/colorPrimary"
+        android:elevation="15dp"
+        android:scaleType="center"
+        android:src="@drawable/fab_heart"
+        android:id="@+id/floatingActionButton"
+        app:backgroundTint="?attr/colorPrimary"
+        app:rippleColor="@android:color/background_light"
+        android:stateListAnimator="@animator/raise"/>
+
+</merge>

@@ -1,16 +1,24 @@
 package com.santhosh.smarttheatre;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Point;
+import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationMenu;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.santhosh.smarttheatre.database.FavouriteDataSet;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,17 +37,32 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static String API_KEY = BuildConfig.API_KEY;
+    public static String API_KEY = BuildConfig.API_KEY;
+    public static float deviceDensity;
+    public static int screenWidth,screenHeight;
+
     List<MovieData> movieHolderList = new ArrayList<>();
     MovieRecycleAdapter movieRecycleAdapter;
     boolean isLoading = false;
     int currentPage = 1;
     String type = "popular";
+    private FavouriteDataSet favouriteDataSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        BottomNavigationView bottomNavigationMenu = (BottomNavigationView) findViewById(R.id.bottom_bar);
+        bottomNavigationMenu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                return onOptionsItemSelected(item);
+            }
+        });
+        deviceDensity = getResources().getDisplayMetrics().density;
+        screenWidth = getResources().getDisplayMetrics().widthPixels;
+        screenHeight = getResources().getDisplayMetrics().heightPixels;
 
         int noOfCols = calculateNoOfColumns(this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movie_list);
@@ -46,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(gridLayoutManager);
         movieRecycleAdapter = new MovieRecycleAdapter(20);
         recyclerView.setAdapter(movieRecycleAdapter);
+
+        favouriteDataSet = new FavouriteDataSet(this);
+        favouriteDataSet.openDB();
+        favouriteDataSet.getFavList();
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -82,26 +110,44 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.action_menu, menu);
+        /*MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_menu, menu);*/
         return true;
     }
 
-    @Override
+    //@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int ID= item.getItemId();
         if (ID==R.id.top_rated){
+            findViewById(R.id.default_favourite_page).setVisibility(View.INVISIBLE);
+            findViewById(R.id.movie_list).setVisibility(View.VISIBLE);
             movieHolderList = new ArrayList<>();
             currentPage=1;
             type = "top_rated";
             getTopRated();
+            return true;
         }else if (ID==R.id.popular){
+            findViewById(R.id.default_favourite_page).setVisibility(View.INVISIBLE);
+            findViewById(R.id.movie_list).setVisibility(View.VISIBLE);
             movieHolderList = new ArrayList<>();
             currentPage=1;
             type = "popular";
             getPopularRequest();
+            return true;
+        }else if (ID==R.id.favourites){
+            type = "favourites";
+            movieHolderList = favouriteDataSet.getFavList();
+            if (movieHolderList.size()>0){
+                movieRecycleAdapter = new MovieRecycleAdapter(movieHolderList);
+                RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movie_list);
+                recyclerView.setAdapter(movieRecycleAdapter);
+            }else {
+                findViewById(R.id.default_favourite_page).setVisibility(View.VISIBLE);
+                findViewById(R.id.movie_list).setVisibility(View.INVISIBLE);
+            }
+            return true;
         }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     private void processJson(JSONObject jsonObject) throws Exception {
@@ -175,5 +221,36 @@ public class MainActivity extends AppCompatActivity {
         });
 
         queue.add(jsonObjectRequest);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("activity","result");
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onResume() {
+        Log.e("on","resume");
+        favouriteDataSet.openDB();
+        if (type.equals("favourites")){
+            movieHolderList = favouriteDataSet.getFavList();
+            movieRecycleAdapter.setMovieDataList(movieHolderList);
+            movieRecycleAdapter.notifyDataSetChanged();
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        favouriteDataSet.closeDB();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        favouriteDataSet.closeDB();
+        super.onDestroy();
     }
 }
