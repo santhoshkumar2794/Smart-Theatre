@@ -6,7 +6,6 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -15,17 +14,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.ColorUtils;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.TextUtils;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -33,6 +27,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -42,6 +37,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.santhosh.smarttheatre.database.FavouriteDataSet;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -71,6 +67,9 @@ public class MovieActivity extends AppCompatActivity {
     private int statusBarColor;
     private int currentStatusBarColor;
 
+    @BindView(R.id.top_level_view)
+    NestedScrollView scrollView;
+
     @BindView(R.id.title_view)
     TextView titleView;
     @BindView(R.id.overview)
@@ -87,6 +86,8 @@ public class MovieActivity extends AppCompatActivity {
 
     private MovieData movieData;
     private FavouriteDataSet favouriteDataSet;
+    private boolean slideOut;
+    private Target target;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,9 +115,8 @@ public class MovieActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("clicked","here "+floatingActionButton.isChecked());
-                if (movieData!=null) {
-                 movieData.favourites = !floatingActionButton.isChecked();
+                if (movieData != null) {
+                    movieData.favourites = !floatingActionButton.isChecked();
                     favouriteDataSet.insertItem(movieData);
                 }
                 floatingActionButton.toggle();
@@ -127,7 +127,7 @@ public class MovieActivity extends AppCompatActivity {
         String backdrop_url = "https://image.tmdb.org/t/p/w500/" + movieData.backdrop_path;
 
         Picasso.with(this).load(poster_url).into(poster_imageView);
-        Picasso.with(this).load(backdrop_url).into(new Target() {
+        target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 backdrop_imageView.setImageBitmap(bitmap);
@@ -167,7 +167,8 @@ public class MovieActivity extends AppCompatActivity {
             public void onPrepareLoad(Drawable placeHolderDrawable) {
 
             }
-        });
+        };
+        Picasso.with(this).load(backdrop_url).into(target);
 
         titleView.setText(movieData.original_title);
         overViewContainer.setText(movieData.overview);
@@ -180,7 +181,7 @@ public class MovieActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             activityTransition(poster_imageView);
         }
-        String trailer_URL = "https://api.themoviedb.org/3/movie/"+ movieData.id+"/videos?api_key="+MainActivity.API_KEY+"&language=en-US";
+        String trailer_URL = "https://api.themoviedb.org/3/movie/" + movieData.id + "/videos?api_key=" + MainActivity.API_KEY + "&language=en-US";
         RequestQueue queue = Volley.newRequestQueue(this);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, trailer_URL, null, new Response.Listener<JSONObject>() {
@@ -199,7 +200,7 @@ public class MovieActivity extends AppCompatActivity {
             }
         });
 
-        String review_URL = "https://api.themoviedb.org/3/movie/"+ movieData.id+"/reviews?api_key="+MainActivity.API_KEY+"&language=en-US";
+        String review_URL = "https://api.themoviedb.org/3/movie/" + movieData.id + "/reviews?api_key=" + MainActivity.API_KEY + "&language=en-US";
 
         JsonObjectRequest reviewRequest = new JsonObjectRequest(Request.Method.GET, review_URL, null, new Response.Listener<JSONObject>() {
             @Override
@@ -218,104 +219,48 @@ public class MovieActivity extends AppCompatActivity {
         });
 
         queue.add(jsonObjectRequest);
-        Log.e("movie","ID  "+ movieData.id);
         queue.add(reviewRequest);
     }
 
-    private void trailerJSON(JSONObject response) throws Exception{
+
+    private void trailerJSON(JSONObject response) throws Exception {
         JSONArray jsonArray = response.getJSONArray("results");
         LinearLayout trialer_container = (LinearLayout) findViewById(R.id.trailer_container);
-        int visibilty = jsonArray.length()>0 ? View.VISIBLE : View.INVISIBLE;
+        int visibilty = jsonArray.length() > 0 ? View.VISIBLE : View.INVISIBLE;
         trialer_container.setVisibility(visibilty);
-        for (int i=0;i<jsonArray.length();i++) {
+        for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             String imageURL = "https://img.youtube.com/vi/" + jsonObject.get("key") + "/sddefault.jpg";
             final ImageView imageView = new ImageView(this);
             imageView.setTag(jsonObject.get("key"));
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(400,300);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(400, 300);
             params.leftMargin = 30;
-            params.rightMargin =30;
+            params.rightMargin = 30;
             imageView.setLayoutParams(params);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             trialer_container.addView(imageView);
             Picasso.with(this).load(imageURL).placeholder(R.drawable.image_placeholder).into(imageView);
-            Log.e("image", "url " + imageURL);
 
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v="+imageView.getTag()));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + imageView.getTag()));
                     startActivity(intent);
                 }
             });
         }
     }
 
-    private void reviewJSON(JSONObject response) throws Exception{
+    private void reviewJSON(JSONObject response) throws Exception {
         JSONArray jsonArray = response.getJSONArray("results");
         LinearLayout review_container = (LinearLayout) findViewById(R.id.review_container);
-        int visibilty = jsonArray.length()>0 ? View.VISIBLE : View.INVISIBLE;
+        int visibilty = jsonArray.length() > 0 ? View.VISIBLE : View.INVISIBLE;
         review_container.setVisibility(visibilty);
-        for (int i=0;i<jsonArray.length();i++) {
-            LinearLayout reviewBox = new LinearLayout(this);
-            reviewBox.setOrientation(LinearLayout.VERTICAL);
-
+        for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            SpannableStringBuilder author = new SpannableStringBuilder(jsonObject.getString("author"));
-            int authorLength  = author.length();
-            author.setSpan(new AbsoluteSizeSpan(45),0,author.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            author.setSpan(Typeface.BOLD,0,authorLength,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            author.setSpan(new ForegroundColorSpan(Color.BLACK),0,authorLength,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            author.append("\n");
-            author.append(jsonObject.getString("content"));
-            author.setSpan(new AbsoluteSizeSpan(35),authorLength,author.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            final TextView textView = new TextView(this);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.topMargin = (int)(5*MainActivity.deviceDensity);
-            params.leftMargin = (int)(5*MainActivity.deviceDensity);
-            textView.setLayoutParams(params);
-            textView.setText(author);
-            textView.setMaxLines(4);
-            textView.setEllipsize(TextUtils.TruncateAt.END);
-            reviewBox.addView(textView);
-
-            final TextView readMore = new TextView(this);
-            LinearLayout.LayoutParams readMoreParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            readMoreParams.gravity = Gravity.END;
-            readMoreParams.rightMargin = (int)(10*MainActivity.deviceDensity);
-            readMoreParams.topMargin = (int)(5*MainActivity.deviceDensity);
-            readMore.setLayoutParams(readMoreParams);
-            readMore.setTag(i);
-            readMore.setText("Read More...");
-            readMore.setTextColor(Color.BLACK);
-            readMore.setTextSize(14);
-            readMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    LinearLayout view1 = (LinearLayout)((LinearLayout) findViewById(R.id.review_container)).getChildAt((int)view.getTag()+1);
-                    TextView review = (TextView) view1.getChildAt(0);
-                    if (review.getMaxLines()!=Integer.MAX_VALUE) {
-                        review.setMaxLines(Integer.MAX_VALUE);
-                        review.setEllipsize(null);
-                        readMore.setText("Read Less...");
-                    }else {
-                        review.setMaxLines(4);
-                        review.setEllipsize(TextUtils.TruncateAt.END);
-                        readMore.setText("Read More...");
-                    }
-                }
-            });
-            reviewBox.addView(readMore);
-
-            View view = new View(this);
-            LinearLayout.LayoutParams viewParam = new LinearLayout.LayoutParams((int)(MainActivity.screenWidth/1.5f),(int)(1*MainActivity.deviceDensity));
-            viewParam.topMargin = (int)(10*MainActivity.deviceDensity);
-            viewParam.gravity = Gravity.CENTER;
-            view.setLayoutParams(viewParam);
-            view.setBackgroundColor(Color.BLACK);
-            reviewBox.addView(view);
-
+            LinearLayout reviewBox = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.review_holder, review_container, false);
+            ((TextView) reviewBox.findViewById(R.id.author_name)).setText(jsonObject.getString("author"));
+            ((TextView) reviewBox.findViewById(R.id.review_text)).setText(jsonObject.getString("content"));
             review_container.addView(reviewBox);
         }
     }
@@ -456,19 +401,33 @@ public class MovieActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+
+        int[] screenLocation = new int[2];
+        poster_imageView.getLocationOnScreen(screenLocation);
+        mLeftDelta = thumbnailLeft - screenLocation[0];
+        mTopDelta = thumbnailTop - screenLocation[1];
+        slideOut = screenLocation[1] >= 0;
+        if (slideOut) {
             runExitAnimation(new Runnable() {
                 @Override
                 public void run() {
                     finish();
                 }
             });
+        } else {
+            finish();
+        }
     }
 
     @Override
     public void finish() {
         favouriteDataSet.closeDB();
         super.finish();
-        overridePendingTransition(0, 0);
+        if (slideOut) {
+            overridePendingTransition(0, 0);
+        } else {
+            overridePendingTransition(0, R.anim.slide_out);
+        }
     }
 
     @Override

@@ -7,4 +7,8 @@
     <string name="title">TITLE</string>
     <string name="trailer">Trailer</string>
     <string name="review">Review</string>
+    <string name="network_unavailable">No InternetConnection. Make sure Wi-FI or Cellular-data is turned on, then try again later</string>
+    <string name="no_fav">There are no favourites...</string>
+    <string name="author_name">author name</string>
+    <string name="review_content">review content</string>
 </resources>

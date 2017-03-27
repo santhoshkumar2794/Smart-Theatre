@@ -10,7 +10,7 @@ import android.widget.ImageButton;
  * Created by santhosh-3366 on 16/03/17.
  */
 
-public class FABToggle extends FloatingActionButton implements Checkable {
+public class FABToggle extends FloatingActionButton /*implements Checkable */{
 
     private static final int[] CHECKED_STATE_SET = { android.R.attr.state_checked };
 

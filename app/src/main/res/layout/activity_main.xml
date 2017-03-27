@@ -14,13 +14,13 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:textSize="20sp"
-        android:text="There are no favourites..."
-        android:visibility="invisible"/>
+        android:text="@string/network_unavailable" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/movie_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="invisible"
         android:paddingLeft="@dimen/activity_horizontal_margin" />
 
     <android.support.design.widget.BottomNavigationView

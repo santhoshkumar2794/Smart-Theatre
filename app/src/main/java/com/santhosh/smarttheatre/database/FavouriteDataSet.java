@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.santhosh.smarttheatre.MovieData;
 
@@ -49,20 +48,17 @@ public class FavouriteDataSet {
         values.put(DataBaseHelper.MOVIE_VOTE_COUNT, movieData.getVote_count());
         values.put(DataBaseHelper.MOVIE_FAVOURITE,(movieData.isFavourites()?1:0));
         long colID = sqLiteDatabase.insert(DataBaseHelper.MOVIE_TABLE_NAME, null, values);
-        Log.e("col", "ID " + colID);
     }
 
     public int getData(int movieID) {
         Cursor cursor = sqLiteDatabase.query(DataBaseHelper.MOVIE_TABLE_NAME, new String[]{DataBaseHelper.MOVIE_ID, DataBaseHelper.MOVIE_NAME}, DataBaseHelper.MOVIE_ID + "=?", new String[]{String.valueOf(movieID)}, null, null, null, null);
         cursor.moveToFirst();
-        Log.e("cursor ", "here  " + "  " + cursor.getString(0) + "  " + cursor.getString(1));
         cursor.close();
         return movieID;
     }
 
     public boolean hasItem(int movieID) {
         Cursor cursor = sqLiteDatabase.query(DataBaseHelper.MOVIE_TABLE_NAME, new String[]{DataBaseHelper.MOVIE_ID, DataBaseHelper.MOVIE_NAME}, DataBaseHelper.MOVIE_ID + "=?", new String[]{String.valueOf(movieID)}, null, null, null, null);
-        Log.e("cursor", "here " + cursor.getCount());
         return cursor.getCount() == 1;
     }
 
@@ -70,9 +66,7 @@ public class FavouriteDataSet {
         ContentValues values = new ContentValues();
         values.put(DataBaseHelper.MOVIE_ID, movieData.getId());
         values.put(DataBaseHelper.MOVIE_NAME, movieData.getTitle());
-        //sqLiteDatabase.update(DataBaseHelper.MOVIE_TABLE_NAME,values,DataBaseHelper.MOVIE_ID +"=?",new String[]{String.valueOf(movieData.getId())});
         int deleteStatus = sqLiteDatabase.delete(DataBaseHelper.MOVIE_TABLE_NAME, DataBaseHelper.MOVIE_ID + "=" + movieData.getId(), null);
-        Log.e("delete", "status " + deleteStatus);
     }
 
     public List<MovieData> getFavList() {
@@ -80,7 +74,6 @@ public class FavouriteDataSet {
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + DataBaseHelper.MOVIE_TABLE_NAME, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Log.e("MOVIE ID " + cursor.getString(0), " TITLE  " + cursor.getString(1) + "  " + cursor.getColumnCount());
             try {
                 MovieData movieData = new MovieData();
 

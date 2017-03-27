@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.design.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:id="@+id/top_level_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -93,7 +95,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="140dp"
-                    android:fontFamily="sans-serif-medium"
+                    android:fontFamily="serif"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
                     android:text="@string/plot"
                     android:textSize="21sp" />
 
@@ -106,7 +110,8 @@
                     android:layout_marginTop="5dp"
                     android:fontFamily="sans-serif"
                     android:text="@string/overview_content"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:textColor="@android:color/secondary_text_light"/>
 
                 <TextView
                     android:id="@+id/trailer_title"
@@ -114,8 +119,10 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/overview"
                     android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginTop="7dp"
+                    android:fontFamily="serif"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
                     android:text="@string/trailer"
                     android:textSize="21sp" />
 
@@ -142,6 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/trailer_scroll"
                     android:orientation="vertical"
+                    android:layout_marginTop="10dp"
                     android:visibility="invisible">
 
                     <TextView
@@ -150,14 +158,16 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="10dp"
-                        android:fontFamily="sans-serif-medium"
+                        android:fontFamily="serif"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
                         android:text="@string/review"
                         android:textSize="21sp" />
                 </LinearLayout>
             </RelativeLayout>
 
         </RelativeLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
     <com.santhosh.smarttheatre.FABToggle
         android:layout_width="56dp"
@@ -173,6 +183,7 @@
         android:id="@+id/floatingActionButton"
         app:backgroundTint="?attr/colorPrimary"
         app:rippleColor="@android:color/background_light"
+        app:layout_behavior="com.santhosh.smarttheatre.FABBehaviour"
         android:stateListAnimator="@animator/raise"/>
 
-</merge>
+</android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginLeft="5dp">
+
+    <TextView
+        android:id="@+id/author_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/author_name"
+        android:textColor="@android:color/black"
+        android:fontFamily="serif"
+        android:textStyle="bold"
+        android:textSize="16sp"/>
+
+    <com.borjabravo.readmoretextview.ReadMoreTextView
+        android:id="@+id/review_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="@string/review_content"
+        android:textColor="@android:color/secondary_text_light"
+        android:fontFamily="serif"
+        android:textSize="14sp"
+        app:trimLines="3"
+        app:colorClickableText="@color/accent"/>
+</LinearLayout>

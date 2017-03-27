@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationMenu;
 import android.support.design.widget.BottomNavigationView;
@@ -14,11 +16,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,6 +35,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
 
     public static String API_KEY = BuildConfig.API_KEY;
@@ -48,10 +51,16 @@ public class MainActivity extends AppCompatActivity {
     String type = "popular";
     private FavouriteDataSet favouriteDataSet;
 
+    @BindView(R.id.default_favourite_page)
+    TextView statusTextView;
+    @BindView(R.id.movie_list)
+    RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         BottomNavigationView bottomNavigationMenu = (BottomNavigationView) findViewById(R.id.bottom_bar);
         bottomNavigationMenu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -87,7 +96,21 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        getPopularRequest();
+        if (checkConnection()) {
+            statusTextView.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.VISIBLE);
+            getPopularRequest();
+        }
+    }
+
+    private boolean checkConnection(){
+        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+
+        return isConnected;
     }
 
     public static int calculateNoOfColumns(Context context) {
@@ -108,31 +131,35 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(gridLayoutManager);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        /*MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.action_menu, menu);*/
-        return true;
-    }
-
-    //@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int ID= item.getItemId();
         if (ID==R.id.top_rated){
-            findViewById(R.id.default_favourite_page).setVisibility(View.INVISIBLE);
-            findViewById(R.id.movie_list).setVisibility(View.VISIBLE);
-            movieHolderList = new ArrayList<>();
-            currentPage=1;
-            type = "top_rated";
-            getTopRated();
+            if (checkConnection()) {
+                statusTextView.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
+                movieHolderList = new ArrayList<>();
+                currentPage=1;
+                type = "top_rated";
+                getTopRated();
+            }else {
+                recyclerView.setVisibility(View.INVISIBLE);
+                statusTextView.setVisibility(View.VISIBLE);
+                statusTextView.setText(R.string.network_unavailable);
+            }
             return true;
         }else if (ID==R.id.popular){
-            findViewById(R.id.default_favourite_page).setVisibility(View.INVISIBLE);
-            findViewById(R.id.movie_list).setVisibility(View.VISIBLE);
-            movieHolderList = new ArrayList<>();
-            currentPage=1;
-            type = "popular";
-            getPopularRequest();
+            if (checkConnection()) {
+                statusTextView.setVisibility(View.INVISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
+                movieHolderList = new ArrayList<>();
+                currentPage = 1;
+                type = "popular";
+                getPopularRequest();
+            }else {
+                recyclerView.setVisibility(View.INVISIBLE);
+                statusTextView.setVisibility(View.VISIBLE);
+                statusTextView.setText(R.string.network_unavailable);
+            }
             return true;
         }else if (ID==R.id.favourites){
             type = "favourites";
@@ -141,9 +168,12 @@ public class MainActivity extends AppCompatActivity {
                 movieRecycleAdapter = new MovieRecycleAdapter(movieHolderList);
                 RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movie_list);
                 recyclerView.setAdapter(movieRecycleAdapter);
+                recyclerView.setVisibility(View.VISIBLE);
+                statusTextView.setVisibility(View.INVISIBLE);
             }else {
-                findViewById(R.id.default_favourite_page).setVisibility(View.VISIBLE);
-                findViewById(R.id.movie_list).setVisibility(View.INVISIBLE);
+                statusTextView.setVisibility(View.VISIBLE);
+                statusTextView.setText(R.string.no_fav);
+                recyclerView.setVisibility(View.INVISIBLE);
             }
             return true;
         }
@@ -163,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movie_list);
             recyclerView.setAdapter(movieRecycleAdapter);
         } else {
+            movieRecycleAdapter.setMovieDataList(movieHolderList);
             movieRecycleAdapter.notifyDataSetChanged();
         }
         isLoading = false;
@@ -226,13 +257,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e("activity","result");
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     protected void onResume() {
-        Log.e("on","resume");
         favouriteDataSet.openDB();
         if (type.equals("favourites")){
             movieHolderList = favouriteDataSet.getFavList();
