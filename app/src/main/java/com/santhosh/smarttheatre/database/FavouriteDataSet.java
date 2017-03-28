@@ -19,17 +19,11 @@ public class FavouriteDataSet {
 
     private SQLiteDatabase sqLiteDatabase;
     private DataBaseHelper sqLiteOpenHelper;
+    private Context mContext;
 
     public FavouriteDataSet(Context context) {
-        sqLiteOpenHelper = new DataBaseHelper(context, DataBaseHelper.DATABASE_NAME, null, DataBaseHelper.DATABASE_VERSION);
-    }
-
-    public void openDB() {
-        sqLiteDatabase = sqLiteOpenHelper.getWritableDatabase();
-    }
-
-    public void closeDB() {
-        sqLiteOpenHelper.close();
+        mContext = context;
+        //sqLiteOpenHelper = new DataBaseHelper(context, DataBaseHelper.DATABASE_NAME, null, DataBaseHelper.DATABASE_VERSION);
     }
 
     public void insertItem(MovieData movieData) {
@@ -46,8 +40,9 @@ public class FavouriteDataSet {
         values.put(DataBaseHelper.MOVIE_RELEASE_DATE, movieData.getRelease_date());
         values.put(DataBaseHelper.MOVIE_ORIGINAL_LANGUAGE, movieData.getOriginal_language());
         values.put(DataBaseHelper.MOVIE_VOTE_COUNT, movieData.getVote_count());
-        values.put(DataBaseHelper.MOVIE_FAVOURITE,(movieData.isFavourites()?1:0));
-        long colID = sqLiteDatabase.insert(DataBaseHelper.MOVIE_TABLE_NAME, null, values);
+        values.put(DataBaseHelper.MOVIE_FAVOURITE, (movieData.isFavourites() ? 1 : 0));
+
+        mContext.getContentResolver().insert(FavContentProvider.CONTENT_URI,values);
     }
 
     public int getData(int movieID) {
@@ -58,7 +53,7 @@ public class FavouriteDataSet {
     }
 
     public boolean hasItem(int movieID) {
-        Cursor cursor = sqLiteDatabase.query(DataBaseHelper.MOVIE_TABLE_NAME, new String[]{DataBaseHelper.MOVIE_ID, DataBaseHelper.MOVIE_NAME}, DataBaseHelper.MOVIE_ID + "=?", new String[]{String.valueOf(movieID)}, null, null, null, null);
+        Cursor cursor = mContext.getContentResolver().query(FavContentProvider.CONTENT_URI,new String[]{DataBaseHelper.MOVIE_ID, DataBaseHelper.MOVIE_NAME}, DataBaseHelper.MOVIE_ID + "=?",new String[]{String.valueOf(movieID)},null);
         return cursor.getCount() == 1;
     }
 
@@ -66,12 +61,13 @@ public class FavouriteDataSet {
         ContentValues values = new ContentValues();
         values.put(DataBaseHelper.MOVIE_ID, movieData.getId());
         values.put(DataBaseHelper.MOVIE_NAME, movieData.getTitle());
-        int deleteStatus = sqLiteDatabase.delete(DataBaseHelper.MOVIE_TABLE_NAME, DataBaseHelper.MOVIE_ID + "=" + movieData.getId(), null);
+        mContext.getContentResolver().delete(FavContentProvider.CONTENT_URI,DataBaseHelper.MOVIE_ID + "=" + movieData.getId(), null);
     }
 
     public List<MovieData> getFavList() {
         List<MovieData> movieDataList = new ArrayList<>();
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM " + DataBaseHelper.MOVIE_TABLE_NAME, null);
+        Cursor cursor = mContext.getContentResolver().query(FavContentProvider.CONTENT_URI,null,null,null,null);//sqLiteDatabase.rawQuery("SELECT * FROM " + DataBaseHelper.MOVIE_TABLE_NAME, null);
+        assert cursor != null;
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             try {
@@ -92,9 +88,7 @@ public class FavouriteDataSet {
                 }
                 cursor.moveToNext();
                 movieDataList.add(movieData);
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
 

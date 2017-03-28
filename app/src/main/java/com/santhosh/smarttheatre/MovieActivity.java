@@ -98,7 +98,6 @@ public class MovieActivity extends AppCompatActivity {
         statusBarColor = getWindow().getStatusBarColor();
 
         favouriteDataSet = new FavouriteDataSet(this);
-        favouriteDataSet.openDB();
 
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("extra");
@@ -421,7 +420,6 @@ public class MovieActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
-        favouriteDataSet.closeDB();
         super.finish();
         if (slideOut) {
             overridePendingTransition(0, 0);
@@ -432,7 +430,6 @@ public class MovieActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        favouriteDataSet.openDB();
         super.onResume();
     }
 }

@@ -31,6 +31,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             MOVIE_NAME + " TEXT,"+MOVIE_POSTER_PATH+" TEXT,"+MOVIE_BACKDROP_PATH+" TEXT,"+MOVIE_OVERVIEW+" TEXT,"+
     MOVIE_RELEASE_DATE+" TEXT,"+MOVIE_ORIGINAL_LANGUAGE+" TEXT,"+MOVIE_VOTE_COUNT+" INTEGER,"+MOVIE_FAVOURITE+ " INTEGER);";
 
+    DataBaseHelper(Context context){
+        super(context,DATABASE_NAME, null, DATABASE_VERSION);
+    }
 
     public DataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);

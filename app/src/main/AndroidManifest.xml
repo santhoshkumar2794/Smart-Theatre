@@ -23,6 +23,11 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        
+        <provider
+            android:authorities="com.santhosh.smarttheatre"
+            android:name=".database.FavContentProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

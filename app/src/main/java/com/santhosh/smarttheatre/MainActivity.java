@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(movieRecycleAdapter);
 
         favouriteDataSet = new FavouriteDataSet(this);
-        favouriteDataSet.openDB();
         favouriteDataSet.getFavList();
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -262,7 +261,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        favouriteDataSet.openDB();
         if (type.equals("favourites")){
             movieHolderList = favouriteDataSet.getFavList();
             movieRecycleAdapter.setMovieDataList(movieHolderList);
@@ -273,13 +271,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        favouriteDataSet.closeDB();
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        favouriteDataSet.closeDB();
         super.onDestroy();
     }
 }
